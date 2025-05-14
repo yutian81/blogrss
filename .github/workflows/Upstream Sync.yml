@@ -1,0 +1,54 @@
+name: Upstream Sync
+
+# 修正后的权限配置
+permissions:
+  contents: write
+  actions: write  # 新增必要权限
+  pull-requests: write
+
+on:
+  schedule:
+    - cron: "0 0 * * 0" # 每周日UTC时间0点（北京时间周一8点）
+  workflow_dispatch:
+
+jobs:
+  sync_latest_from_upstream:
+    name: Sync latest commits (强制模式)
+    runs-on: ubuntu-latest
+    if: ${{ github.event.repository.fork }}
+
+    steps:
+      # 第一步：使用v4版本checkout
+      - name: Checkout target repo
+        uses: actions/checkout@v4  # 升级到v4
+        with:
+          fetch-depth: 0  # 获取完整历史
+
+      # 第二步：配置合并策略
+      - name: 配置合并参数
+        run: |
+          git config --global pull.rebase false
+          git config --global merge.renameLimit 999999
+
+      # 第三步：带强制参数的同步
+      - name: Sync upstream changes
+        uses: aormsby/Fork-Sync-With-Upstream-action@v3.4
+        with:
+          upstream_sync_repo: willow-god/Friend-Circle-Lite
+          upstream_sync_branch: main
+          target_sync_branch: main
+          target_repo_token: ${{ secrets.GITHUB_TOKEN }}
+          git_push_force: true  # 关键参数
+          fail_on_sync_conflict: false  # 允许继续执行
+          test_mode: false
+
+      # 第四步：增强版错误处理
+      - name: Sync check
+        if: ${{ failure() }}
+        run: |
+          echo "::warning::[自动同步失败] 需要手动解决冲突"
+          echo "差异对比链接：https://github.com/${{ github.repository }}/compare/main...willow-god:main"
+          echo "| 文件列表 |"
+          echo "|- .github/workflows/friend_circle_lite.yml"
+          echo "|- conf.yaml"
+          # 不执行exit 1以保持工作流继续
