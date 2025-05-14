@@ -65,6 +65,6 @@ specific_RSS:
    - name: "FloatSheep"
      url: "https://blog.hesiy.cn/index.xml"
    - name: "NodeSeek"
-     url: "https://rss.nodeseek.com/"
+     url: "https://rss.nodeseek.com"
    - name: "LowEndTalk"
      url: "https://lowendtalk.com/discussions/feed.rss"
