@@ -62,5 +62,9 @@ smtp:
 specific_RSS:
    - name: "阮一峰"
      url: "http://feeds.feedburner.com/ruanyifeng"
-  # - name: "無名小栈"
-  #   url: "https://blog.imsyy.top/rss.xml"
+   - name: "FloatSheep"
+     url: "https://blog.hesiy.cn/index.xml"
+   - name: "NodeSeek"
+     url: "https://rss.nodeseek.com/"
+   - name: "LowEndTalk"
+     url: "https://lowendtalk.com/discussions/feed.rss"
