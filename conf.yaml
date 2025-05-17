@@ -60,11 +60,9 @@ smtp:
 #   name:               友链名称
 #   url:                指定的RSS地址
 specific_RSS:
-   - name: "阮一峰"
-     url: "http://feeds.feedburner.com/ruanyifeng"
-   - name: "FloatSheep"
-     url: "https://blog.hesiy.cn/index.xml"
    - name: "NodeSeek"
      url: "https://rss.nodeseek.com"
    - name: "LowEndTalk"
      url: "https://lowendtalk.com/discussions/feed.rss"
+   - name: "Linux DO"
+     url: "https://linux.do/posts.rss"
