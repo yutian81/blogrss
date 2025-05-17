@@ -64,5 +64,5 @@ specific_RSS:
      url: "https://rss.nodeseek.com"
    - name: "LowEndTalk"
      url: "https://lowendtalk.com/discussions/feed.rss"
-   - name: "Linux DO"
+   - name: "LINUX DO"
      url: "https://linux.do/posts.rss"
