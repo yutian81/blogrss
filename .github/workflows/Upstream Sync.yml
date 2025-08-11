@@ -3,7 +3,7 @@ name: Upstream Sync
 # 修正后的权限配置
 permissions:
   contents: write
-  actions: write  # 新增必要权限
+  actions: write
   pull-requests: write
 
 on:
@@ -20,9 +20,9 @@ jobs:
     steps:
       # 第一步：使用v4版本checkout
       - name: Checkout target repo
-        uses: actions/checkout@v4  # 升级到v4
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # 获取完整历史
+          fetch-depth: 0
 
       # 第二步：配置合并策略
       - name: 配置合并参数
@@ -38,8 +38,6 @@ jobs:
           upstream_sync_branch: main
           target_sync_branch: main
           target_repo_token: ${{ secrets.GITHUB_TOKEN }}
-          git_push_force: true  # 关键参数
-          fail_on_sync_conflict: false  # 允许继续执行
           test_mode: false
 
       # 第四步：增强版错误处理
