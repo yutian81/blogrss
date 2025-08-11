@@ -16,6 +16,9 @@ jobs:
     name: Sync latest commits (强制模式)
     runs-on: ubuntu-latest
     if: ${{ github.event.repository.fork }}
+    permissions:
+      contents: write
+      actions: write
 
     steps:
       # 第一步：使用v4版本checkout
@@ -49,4 +52,3 @@ jobs:
           echo "| 文件列表 |"
           echo "|- .github/workflows/friend_circle_lite.yml"
           echo "|- conf.yaml"
-          # 不执行exit 1以保持工作流继续
