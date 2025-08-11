@@ -1,6 +1,6 @@
 name: Upstream Sync
 
-# 全局权限配置，但不是解决问题的关键
+# 全局权限配置，保持不变
 permissions:
   contents: write
   actions: write
@@ -16,33 +16,30 @@ jobs:
     name: Sync latest commits (手动模式)
     runs-on: ubuntu-latest
     if: ${{ github.event.repository.fork }}
-    permissions:
-      contents: write
-      actions: write
-      pull-requests: write
-      workflows: write # 明确声明权限
 
     steps:
       - name: Checkout target repo
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          # 关键修改：使用你新创建的 PAT
+          token: ${{ secrets.GITHUB_PAT_TOKEN }}
 
       - name: Configure Git user
         run: |
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
 
-      - name: Add upstream remote and fetch
+      - name: Sync upstream
         run: |
+          # 1. 设置上游远程仓库
           git remote add upstream https://github.com/willow-god/Friend-Circle-Lite.git
+          # 2. 从上游拉取并进行 rebase
           git fetch upstream
-
-      - name: Sync and handle conflicts
-        run: |
           git checkout main
-          git pull upstream main --no-commit --no-rebase --allow-unrelated-histories
+          git rebase upstream/main
+          # 3. 排除 conf.yaml
           git checkout HEAD -- conf.yaml
-          git commit -m "Auto-sync from upstream/main"
+          # 4. 提交和推送
+          git commit -a -m "Auto-sync from upstream/main"
           git push -f origin main
