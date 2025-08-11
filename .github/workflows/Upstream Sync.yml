@@ -1,5 +1,6 @@
 name: Upstream Sync
 
+# 全局权限配置，但不是解决问题的关键
 permissions:
   contents: write
   actions: write
@@ -15,16 +16,19 @@ jobs:
     name: Sync latest commits (手动模式)
     runs-on: ubuntu-latest
     if: ${{ github.event.repository.fork }}
+    permissions:
+      contents: write
+      actions: write
+      pull-requests: write
+      workflows: write # 明确声明权限
 
     steps:
       - name: Checkout target repo
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          # 使用 ${{ secrets.GITHUB_TOKEN }} 确保 Git 命令有权限
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      # 新增步骤：配置 Git 用户信息
       - name: Configure Git user
         run: |
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -32,20 +36,13 @@ jobs:
 
       - name: Add upstream remote and fetch
         run: |
-          # 1. 添加上游仓库为新的 remote
           git remote add upstream https://github.com/willow-god/Friend-Circle-Lite.git
-          # 2. 从上游仓库拉取最新更改
           git fetch upstream
 
       - name: Sync and handle conflicts
         run: |
-          # 3. 切换到主分支
           git checkout main
-          # 4. 从上游分支拉取更改，但先不提交
           git pull upstream main --no-commit --no-rebase --allow-unrelated-histories
-          # 5. 恢复 conf.yaml 到本地版本
           git checkout HEAD -- conf.yaml
-          # 6. 提交合并后的更改
           git commit -m "Auto-sync from upstream/main"
-          # 7. 强制推送到你自己的仓库
           git push -f origin main
