@@ -24,6 +24,12 @@ jobs:
           # 使用 ${{ secrets.GITHUB_TOKEN }} 确保 Git 命令有权限
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      # 新增步骤：配置 Git 用户信息
+      - name: Configure Git user
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+
       - name: Add upstream remote and fetch
         run: |
           # 1. 添加上游仓库为新的 remote
