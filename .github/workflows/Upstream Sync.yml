@@ -1,6 +1,5 @@
 name: Upstream Sync
 
-# 全局权限配置，保持不变
 permissions:
   contents: write
   actions: write
@@ -22,7 +21,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          # 关键修改：使用你新创建的 PAT
           token: ${{ secrets.SYNC_PAT_TOKEN }}
 
       - name: Configure Git user
@@ -34,12 +32,14 @@ jobs:
         run: |
           # 1. 设置上游远程仓库
           git remote add upstream https://github.com/willow-god/Friend-Circle-Lite.git
+          
           # 2. 从上游拉取并进行 rebase
           git fetch upstream
           git checkout main
           git rebase upstream/main
+          
           # 3. 排除 conf.yaml
           git checkout HEAD -- conf.yaml
-          # 4. 提交和推送
-          git commit -a -m "Auto-sync from upstream/main"
+          
+          # 4. 推送到你的仓库
           git push -f origin main
