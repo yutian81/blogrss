@@ -23,7 +23,7 @@ jobs:
         with:
           fetch-depth: 0
           # 关键修改：使用你新创建的 PAT
-          token: ${{ secrets.GITHUB_PAT_TOKEN }}
+          token: ${{ secrets.SYNC_PAT_TOKEN }}
 
       - name: Configure Git user
         run: |
