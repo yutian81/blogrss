@@ -1,6 +1,5 @@
 name: Upstream Sync
 
-# 修正后的权限配置
 permissions:
   contents: write
   actions: write
@@ -13,42 +12,34 @@ on:
 
 jobs:
   sync_latest_from_upstream:
-    name: Sync latest commits (强制模式)
+    name: Sync latest commits (手动模式)
     runs-on: ubuntu-latest
     if: ${{ github.event.repository.fork }}
-    permissions:
-      contents: write
-      actions: write
 
     steps:
-      # 第一步：使用v4版本checkout
       - name: Checkout target repo
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          # 使用 ${{ secrets.GITHUB_TOKEN }} 确保 Git 命令有权限
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      # 第二步：配置合并策略
-      - name: 配置合并参数
+      - name: Add upstream remote and fetch
         run: |
-          git config --global pull.rebase false
-          git config --global merge.renameLimit 999999
+          # 1. 添加上游仓库为新的 remote
+          git remote add upstream https://github.com/willow-god/Friend-Circle-Lite.git
+          # 2. 从上游仓库拉取最新更改
+          git fetch upstream
 
-      # 第三步：带强制参数的同步
-      - name: Sync upstream changes
-        uses: aormsby/Fork-Sync-With-Upstream-action@v3.4
-        with:
-          upstream_sync_repo: willow-god/Friend-Circle-Lite
-          upstream_sync_branch: main
-          target_sync_branch: main
-          target_repo_token: ${{ secrets.GITHUB_TOKEN }}
-          test_mode: false
-
-      # 第四步：增强版错误处理
-      - name: Sync check
-        if: ${{ failure() }}
+      - name: Sync and handle conflicts
         run: |
-          echo "::warning::[自动同步失败] 需要手动解决冲突"
-          echo "差异对比链接：https://github.com/${{ github.repository }}/compare/main...willow-god:main"
-          echo "| 文件列表 |"
-          echo "|- .github/workflows/friend_circle_lite.yml"
-          echo "|- conf.yaml"
+          # 3. 切换到主分支
+          git checkout main
+          # 4. 从上游分支拉取更改，但先不提交
+          git pull upstream main --no-commit --no-rebase --allow-unrelated-histories
+          # 5. 恢复 conf.yaml 到本地版本
+          git checkout HEAD -- conf.yaml
+          # 6. 提交合并后的更改
+          git commit -m "Auto-sync from upstream/main"
+          # 7. 强制推送到你自己的仓库
+          git push -f origin main
