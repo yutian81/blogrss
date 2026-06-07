@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  sync_latest_from_upstream:
+  sync_from_upstream:
     runs-on: ubuntu-latest
     if: ${{ github.event.repository.fork }}
 
@@ -38,7 +38,12 @@ jobs:
           cp conf.yaml.tmp conf.yaml
           rm -f conf.yaml.tmp
           
-          # 提交并推送
+          # 提交变更（有变更才提交，无变更则输出提示）
           git add .
-          git commit -m "Sync from upstream $(date '+%Y-%m-%d')"
-          git push origin main
+          if git diff --staged --quiet; then
+            echo "✅ 当前代码已是最新，无需同步！"
+          else
+            git commit -m "Sync from upstream $(date '+%Y-%m-%d')"
+            git push origin main
+            echo "✅ 同步上游更新成功！"
+          fi
