@@ -29,18 +29,12 @@ jobs:
 
       - name: Sync upstream safely
         run: |
-          # 备份你的配置文件（关键！）
           cp conf.yaml conf.yaml.tmp
           
-          # 同步上游
           git remote add upstream https://github.com/willow-god/Friend-Circle-Lite.git
           git fetch upstream
-          
-          # 安全合并，不丢失文件
-          git checkout main
           git merge upstream/main --no-commit --no-ff
           
-          # 强制恢复你的配置文件
           cp conf.yaml.tmp conf.yaml
           rm -f conf.yaml.tmp
           
