@@ -2,7 +2,7 @@ name: Friend Circle Lite
 
 on:
   schedule:
-    - cron: "22 */4 * * *"
+    - cron: "22 */6 * * *"
   workflow_dispatch:
 
 env:
@@ -93,18 +93,3 @@ jobs:
       with:
         retain_days: 30
         keep_minimum_runs: 6
-
-  keepalive-workflow:
-    name: Keepalive Workflow
-    if: ${{ always() }}
-    needs: friend-circle-lite
-    runs-on: ubuntu-latest
-    permissions:
-      actions: write
-      contents: read
-    steps:
-      - uses: liskin/gh-workflow-keepalive@v1
-        with:
-          GITHUB_TOKEN: ${{ github.token }}
-        env:
-          GH_TOKEN: ${{ github.token }}
