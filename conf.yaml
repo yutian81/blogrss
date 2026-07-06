@@ -33,7 +33,7 @@ proxy_settings:
 #   merge_link_check_data: 是否合并友链可达性数据
 merge_settings:
   enable: false
-  remote_base_url: "https://flink.alist.indevs.in"
+  remote_base_url: "https://flink.bbyy.eu.cc"
   merge_article_data: true
   merge_link_check_data: true
 
