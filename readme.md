@@ -385,59 +385,38 @@
 
 **注意，以下可能仅适用于hexo-theme-butterfly或部分类butterfly主题，如果你是其他主题，可以自行适配，理论上只要存在友链数据文件都可以整理为该类型，甚至可以自行整理为对应json格式后放到 `/source` 目录下即可，格式可以参考：`https://blog.qyliu.top/friend.json` **
 
-1. 将以下文件放置到博客根目录：
+1. 将仓库中的 `link.js` 文件放到博客根目录，该文件的作用
 
-   ```javascript
-   const YML = require('yamljs')
-   const fs = require('fs')
-   
-   let friends = [],
-       data_f = YML.parse(fs.readFileSync('source/_data/link.yml').toString().replace(/(?<=rss:)\s*\n/g, ' ""\n'));
-   
-   data_f.forEach((entry, index) => {
-       let lastIndex = 2;
-       if (index < lastIndex) {
-           const filteredLinkList = entry.link_list.filter(linkItem => !blacklist.includes(linkItem.name));
-           friends = friends.concat(filteredLinkList);
-       }
-   });
-   
-   // 根据规定的格式构建 JSON 数据
-   const friendData = {
-       friends: friends.map(item => {
-           return [item.name, item.link, item.avatar];
-       })
-   };
-   
-   // 将 JSON 对象转换为字符串
-   const friendJSON = JSON.stringify(friendData, null, 2);
-   
-   // 写入 friend.json 文件
-   fs.writeFileSync('./source/friend.json', friendJSON);
-   
-   console.log('friend.json 文件已生成。');
-   ```
+- 需要安装依赖 yamljs：`npm install yamljs --save`
+- 自动检测 `\source\_data\link.yml` 中的链接是否可达
+- 若某个链接不可达，则将整个链接条目以 `# ` 注释
+- 下次检测时，若已注释的不可达链接条目变为可达，则取消 `# ` 注释
+- 对所有可达的链接条目生成 `\source\friend.json`
+- 这样，本项目爬取的 friend.json 将一直保持有效，可访问
 
-2. 在根目录下运行：
+2. 手动运行：
 
    ```bash
    node link.js
    ```
 
-   你将会在source文件中发现文件`friend.json`，即为对应格式文件，下面正常hexo三件套即可放置到网站根目录。
+3. 自动化
 
-3. (可选)添加运行命令到脚本中方便执行，在根目录下创建：
+将博库根目录的 `package.json` 文件中 `scripts` 改为：
 
-   ```bash
-   @echo off
-   E:
-   cd E:\Programming\HTML_Language\willow-God\blog
-   node link.js && hexo g && hexo algolia && hexo d
-   ```
+```json
+  "scripts": {
+    "link": "node link.js",
+    "dev": "npm run link && hexo clean && hexo g && hexo s",
+    "build": "npm run link && hexo generate",
+    "clean": "hexo clean",
+    "deploy": "hexo deploy",
+    "server": "hexo server"
+  },
+```
 
-   地址改成自己的，上传时仅需双击即可完成。
-
-   如果是github action，可以在hexo g脚本前添加即可完整构建，注意需要安装yaml包才可解析yml文件。
+运行 `npm run dev` 可本地预览  
+运行 `npm run build` 推送到远程
 
 ## 部署静态网站
 
