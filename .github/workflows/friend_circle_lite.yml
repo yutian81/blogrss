@@ -79,6 +79,8 @@ jobs:
       run: |
         mkdir pages
         cp -r main ./static/edgeone.json ./static/_headers ./static/index.html ./static/readme.md ./static/favicon.ico ./static/bg-light.webp ./static/bg-dark.webp all.json link.json errors.json pages/
+        # 将根绝对路径（/all.json, /link.json）改为相对路径，适配子路径部署
+        sed -i 's|/link\.json|link.json|g; s|/all\.json|all.json|g' pages/index.html
 
     - name: Publish static assets to branches
       run: |
