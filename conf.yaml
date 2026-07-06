@@ -32,7 +32,7 @@ proxy_settings:
 #   merge_article_data:    是否合并友圈文章数据
 #   merge_link_check_data: 是否合并友链可达性数据
 merge_settings:
-  enable: false
+  enable: true
   remote_base_url: "https://blog2.811520.xyz/blogrss"
   merge_article_data: true
   merge_link_check_data: true
@@ -75,7 +75,7 @@ rss_subscribe:
 # SMTP 配置
 # 说明：用于上方邮件相关功能。如果不使用邮件功能，可关闭 email_push 和 rss_subscribe。
 smtp:
-  email: mail9.serv00.com
+  email: admin@24811213.xyz
   server: mail9.serv00.com
   port: 465
   use_tls: true
