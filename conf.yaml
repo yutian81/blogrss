@@ -10,7 +10,7 @@ debug: false
 #   article_count: 每个站点最多抓取的文章数量
 spider_settings:
   enable: true
-  json_url: "https://blog.811520.xyz/friend.json"
+  json_url: "https://blog.notett.com/friend.json"
   article_count: 5
 
 # 代理配置
@@ -33,7 +33,7 @@ proxy_settings:
 #   merge_link_check_data: 是否合并友链可达性数据
 merge_settings:
   enable: false
-  remote_base_url: "https://flink.bbyy.eu.cc"
+  remote_base_url: "http://blog2.811520.xyz/blogrss"
   merge_article_data: true
   merge_link_check_data: true
 
@@ -51,7 +51,7 @@ link_check:
   max_workers: 10
   status_api_url: "https://v2.xxapi.cn/api/status?url={url}"
   enable_backlink_check: true
-  author_url: "blog.811520.xyz"
+  author_url: "blog.notett.com"
 
 # 邮件推送功能配置，暂未实现，等待后续开发
 # 说明：每次运行后向指定邮箱推送所有友链文章更新。
@@ -67,7 +67,7 @@ rss_subscribe:
   enable: false
   github_username: yutian81
   github_repo: blogrss
-  your_blog_url: https://blog.811520.xyz/
+  your_blog_url: https://blog.notett.com/
   email_template: "./push_templates/default.html"
   website_info:
     title: "青云志"
